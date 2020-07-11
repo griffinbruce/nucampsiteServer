@@ -12,7 +12,7 @@ const partnerRouter = require('./routes/partnerRouter');
 
 const mongoose = require('mongoose');
 
-// establish connectiong to mongodb server
+// establish connection to mongodb server
 const url = 'mongodb://localhost:27017/nucampsite';
 const connect = mongoose.connect(url, {
   useCreateIndex: true,
