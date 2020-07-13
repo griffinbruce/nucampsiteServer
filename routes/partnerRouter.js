@@ -6,6 +6,7 @@ const partnerRouter = express.Router();
 
 partnerRouter.use(bodyParser.json());
 
+// routing endpoints for /partners
 partnerRouter.route('/')
 .get((req, res, next) => {
     Partner.find()
@@ -40,6 +41,7 @@ partnerRouter.route('/')
     .catch(err => next(err));
 });
 
+// routing endpoints for /partners/:partnerId
 partnerRouter.route('/:partnerId')
 .get((req, res, next) => {
     Partner.findById(req.params.partnerId)

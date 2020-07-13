@@ -75,6 +75,7 @@ campsiteRouter.route('/:campsiteId')
     .catch(err => next(err));
 });
 
+//endpoint routing for comments within campsites
 campsiteRouter.route('/:campsiteId/comments')
 .get((req, res, next) => {
     Campsite.findById(req.params.campsiteId)
