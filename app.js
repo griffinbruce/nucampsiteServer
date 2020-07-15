@@ -1,12 +1,9 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
-var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const session = require('express-session');
-const FileStore = require('session-file-store')(session);
 const passport = require('passport');
-const authenticate = require('./authenticate');
+const config = require('./config');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -17,7 +14,7 @@ const partnerRouter = require('./routes/partnerRouter');
 const mongoose = require('mongoose');
 
 // establish connection to mongodb server
-const url = 'mongodb://localhost:27017/nucampsite';
+const url = config.mongoUrl;
 const connect = mongoose.connect(url, {
   useCreateIndex: true,
   useFindAndModify: false,
@@ -40,37 +37,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 //app.use(cookieParser('12345-67890-09876-54321'));
 
-app.use(session({
-  name: 'session-id',
-  secret: '12345-67890-09876-54321',
-  saveUninitialized: false,
-  resave: false,
-  store: new FileStore()
-}))
-
 app.use(passport.initialize());
-app.use(passport.session());
 
-//add authentication
-function auth(req, res, next) {
-  console.log(req.user);
-
-  if (!req.user) {
-      const err = new Error('You are not authenticated');
-      err.status = 401;
-      return next(err);
-  } else {
-      return next();
-  }
-}
-
-//placed before auth so unregistered users can access
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-app.use(auth);
-
-//everything following auth only accessible by registered users
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/campsites', campsiteRouter);
